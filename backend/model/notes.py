@@ -1,8 +1,12 @@
+from __future__ import annotations
 from sqlalchemy.orm import  mapped_column, Mapped, relationship
 from uuid import UUID, uuid4
-from backend.model.user import User
+from typing import TYPE_CHECKING
 from sqlalchemy import String, ForeignKey
 from backend.model.base import Base
+
+if TYPE_CHECKING:
+    from backend.model.user import User
 
 
 class Notes(Base):

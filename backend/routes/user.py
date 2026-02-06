@@ -1,14 +1,17 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Response
 from backend.pydantic_model.user import User_data
 from backend.db.database import get_session
 from sqlalchemy import Select
 from backend.model.user import User
+from backend.constant.utlis import secret
+import jwt
 
-router = APIRouter(prefix="users", tags=["user"])
+router = APIRouter(prefix="/users", tags=["user"])
 
 
-@router.post("/login")
-def user_signup(user: User_data):
+@router.post("/signup")
+def user_signup(user: User_data, response: Response):
+    print("users data",user)
     session = get_session()
     name = user.name
     email = user.email
@@ -29,9 +32,15 @@ def user_signup(user: User_data):
     new_user.set_password(password)
     session.add(new_user)
     session.commit()
+    
+  
+    
+    #use jwt
+    encoded_jwt = jwt.encode({"id":str(new_user.id)},secret,algorithm="HS256") # type: ignore
     session.close()
+    response.set_cookie(key="token",value=encoded_jwt)
     return {
         "status": status.HTTP_201_CREATED,
         "message": "user created successfull",
-        "user ID": new_user.id,
+        "user ID": str(new_user.id),
     }

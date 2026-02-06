@@ -1,8 +1,13 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from __future__ import annotations
+from sqlalchemy.orm import Mapped, mapped_column,relationship
 from sqlalchemy import String
 from bcrypt import gensalt, hashpw, checkpw
 from uuid import uuid4, UUID
+from typing import List, TYPE_CHECKING
 from backend.model.base import Base
+
+if TYPE_CHECKING:
+    from backend.model.notes import Notes
 
 
 class User(Base):
@@ -11,6 +16,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    notes :Mapped[List["Notes"]] = relationship(back_populates="user")
 
     def set_password(self, password: str):
         passoword_in_bytes = password.encode("utf-8")
