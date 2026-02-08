@@ -16,7 +16,9 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    admin:Mapped[bool]=mapped_column(default=False)
     notes :Mapped[List["Notes"]] = relationship(back_populates="user")
+
 
     def set_password(self, password: str):
         passoword_in_bytes = password.encode("utf-8")
