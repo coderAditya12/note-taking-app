@@ -10,7 +10,7 @@ import jwt
 if not secret:
     raise ValueError("Secret key is not configured")
 
-router = APIRouter(prefix="/users", tags=["user"])
+router = APIRouter(prefix="/users", tags=["user"],dependencies=[Depends())
 
 
 @router.post("/signup")
